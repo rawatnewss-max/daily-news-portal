@@ -12,12 +12,13 @@ export function formatHindiDate(value: string | Date | null | undefined) {
 
 export function makeSlug(input: string) {
   const base = input
+    .normalize("NFC")
     .trim()
     .toLowerCase()
-    .normalize("NFKC")
-    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 90);
+
   return base || "news";
 }
 
