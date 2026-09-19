@@ -18,7 +18,9 @@ export default async function HomePage() {
       {breaking.length > 0 && (
         <div className="bg-red-700 text-white">
           <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-hidden px-4 py-2 sm:px-6 lg:px-8">
-            <span className="shrink-0 rounded bg-white px-2 py-1 text-xs font-black text-red-700">BREAKING</span>
+            <span className="breaking-flash shrink-0 rounded bg-white px-2 py-1 text-xs font-black text-red-700">
+  BREAKING
+</span>
             <div className="flex gap-8 overflow-x-auto whitespace-nowrap text-sm font-semibold [scrollbar-width:none]">
               {breaking.map((item) => <Link key={item.id} href={`/news/${item.slug}`}>{item.title}</Link>)}
             </div>
