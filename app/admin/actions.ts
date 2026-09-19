@@ -144,3 +144,62 @@ export async function updateSettingsAction(formData: FormData) {
   revalidatePath("/");
   redirect("/admin/settings?saved=1");
 }
+export async function createBreakingTickerAction(formData: FormData) {
+  const { supabase } = await requireAdmin();
+
+  const text = safeText(formData.get("text"));
+  const sortOrder = Number(formData.get("sort_order") || 0);
+
+  if (!text) return;
+
+  const { error } = await supabase
+    .from("breaking_ticker")
+    .insert({
+      text,
+      sort_order: sortOrder,
+      is_active: true,
+    });
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/");
+  revalidatePath("/admin/breaking");
+  redirect("/admin/breaking");
+}
+
+export async function toggleBreakingTickerAction(formData: FormData) {
+  const { supabase } = await requireAdmin();
+
+  const id = safeText(formData.get("id"));
+  const isActive = safeText(formData.get("is_active")) === "true";
+
+  if (!id) return;
+
+  const { error } = await supabase
+    .from("breaking_ticker")
+    .update({ is_active: isActive })
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/");
+  revalidatePath("/admin/breaking");
+}
+
+export async function deleteBreakingTickerAction(formData: FormData) {
+  const { supabase } = await requireAdmin();
+
+  const id = safeText(formData.get("id"));
+
+  if (!id) return;
+
+  const { error } = await supabase
+    .from("breaking_ticker")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/");
+  revalidatePath("/admin/breaking");
+}
