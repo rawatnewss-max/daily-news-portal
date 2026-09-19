@@ -33,8 +33,8 @@ export default async function HomePage() {
             </article>
             <aside className="card p-5">
               <SectionTitle>ताज़ा खबरें</SectionTitle>
-              <div className="divide-y">
-                {rest.slice(0, 6).map((item) => (
+              <div className="latest-news-scroll max-h-[400px] divide-y overflow-y-auto pr-2">
+                {rest.map((item) => (
                   <Link key={item.id} href={`/news/${item.slug}`} className="block py-3 first:pt-0">
                     <div className="text-xs font-semibold text-red-700">{item.locations?.name ?? item.categories?.name ?? "समाचार"}</div>
                     <div className="mt-1 font-bold leading-6 hover:text-red-700">{item.title}</div>
