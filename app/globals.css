@@ -50,19 +50,19 @@ img { max-width: 100%; }
 }
 
 @keyframes breakingTicker {
-  from {
-    transform: translateX(100vw);
+  0% {
+    transform: translateX(100%);
   }
 
-  to {
+  100% {
     transform: translateX(-100%);
   }
 }
 
 .breaking-ticker {
-  animation: breakingTicker 18s linear infinite;
-}
-
-.breaking-ticker:hover {
-  animation-play-state: paused;
+  display: inline-flex;
+  width: max-content;
+  min-width: 100%;
+  animation: breakingTicker 15s linear infinite;
+  will-change: transform;
 }
