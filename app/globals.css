@@ -48,3 +48,21 @@ img { max-width: 100%; }
 .breaking-flash {
   animation: breakingFlash 0.8s infinite;
 }
+
+@keyframes breakingTicker {
+  from {
+    transform: translateX(100vw);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.breaking-ticker {
+  animation: breakingTicker 18s linear infinite;
+}
+
+.breaking-ticker:hover {
+  animation-play-state: paused;
+}
