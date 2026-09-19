@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { getCategories, getSiteSettings } from "@/lib/data";
-
+import { VisitorCounter } from "@/components/VisitorCounter";
 export async function Header() {
   const [site, categories] = await Promise.all([getSiteSettings(), getCategories()]);
   const today = new Intl.DateTimeFormat("hi-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(new Date());
@@ -11,6 +11,7 @@ export async function Header() {
       <div className="bg-slate-950 text-slate-200">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-xs sm:px-6 lg:px-8">
           <span>{today}</span>
+<VisitorCounter />
           <Link href="/admin/login" className="hover:text-white">Admin Login</Link>
         </div>
       </div>
