@@ -26,10 +26,10 @@ export default async function HomePage() {
       <div className="min-w-0 flex-1 overflow-hidden">
         <div className="breaking-ticker flex w-max gap-8 whitespace-nowrap text-sm font-semibold">
           {breaking.map((item) => (
-            <Link key={item.id} href={`/news/${item.slug}`}>
-              {item.title}
-            </Link>
-          ))}
+  <span key={item.id}>
+    {item.text}
+  </span>
+))}
         </div>
       </div>
 
