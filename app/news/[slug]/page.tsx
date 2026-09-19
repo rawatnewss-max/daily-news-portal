@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { PublicShell } from "@/components/PublicShell";
 import { getArticle } from "@/lib/data";
 import { formatHindiDate } from "@/lib/utils";
+import { ShareButtons } from "@/components/ShareButtons";
 
 export const revalidate = 60;
 
@@ -50,6 +51,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <div className="news-content p-5 sm:p-8">
             {article.content.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>)}
           </div>
+<div className="px-5 pb-6 sm:px-8">
+  <ShareButtons title={article.title} />
+</div>
         </article>
       </div>
     </PublicShell>
