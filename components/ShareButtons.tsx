@@ -10,18 +10,18 @@ export function ShareButtons({ title }: { title: string }) {
   }, []);
 
   const facebookShare = () => {
-    window.open(
-      https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)},
-      "_blank"
-    );
-  };
+  window.open(
+    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    "_blank"
+  );
+};
 
-  const whatsappShare = () => {
-    window.open(
-      https://wa.me/?text=${encodeURIComponent(title + "\n" + url)},
-      "_blank"
-    );
-  };
+const whatsappShare = () => {
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(title + "\n" + url)}`,
+    "_blank"
+  );
+};
 
   const instagramShare = async () => {
     if (navigator.share) {
