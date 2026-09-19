@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { LayoutDashboard, Newspaper, Tags, MapPin, Settings, ExternalLink, LogOut } from "lucide-react";
+import { LayoutDashboard, Newspaper, Zap, Tags, MapPin, Settings, ExternalLink, LogOut } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions";
 
 const links = [
   ["/admin", "Dashboard", LayoutDashboard],
   ["/admin/articles", "News", Newspaper],
+  ["/admin/breaking", "Breaking Ticker", Zap],
   ["/admin/categories", "Categories", Tags],
   ["/admin/locations", "Locations", MapPin],
   ["/admin/settings", "Settings", Settings],
