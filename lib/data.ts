@@ -49,29 +49,38 @@ export async function getLocations() {
 
 export async function getHomeData() {
   const supabase = await createClient();
-  const [featuredRes, latestRes, breakingRes, categoriesRes] = await Promise.all([
-    supabase
-      .from("articles")
-      .select(articleSelect)
-      .eq("status", "published")
-      .eq("is_featured", true)
-      .order("published_at", { ascending: false })
-      .limit(1),
-    supabase
-      .from("articles")
-      .select(articleSelect)
-      .eq("status", "published")
-      .order("published_at", { ascending: false })
-      .limit(12),
-    supabase
-  .from("breaking_ticker")
-  .select("id,text,sort_order,created_at")
-  .eq("is_active", true)
-  .order("sort_order", { ascending: true })
-  .order("created_at", { ascending: false })
-  .limit(20),
-    supabase.from("categories").select("id,name,slug").order("sort_order").limit(6),
-  ]);
+
+  const [featuredRes, latestRes, breakingRes, categoriesRes] =
+    await Promise.all([
+      supabase
+        .from("articles")
+        .select(articleSelect)
+        .eq("status", "published")
+        .eq("is_featured", true)
+        .order("published_at", { ascending: false })
+        .limit(1),
+
+      supabase
+        .from("articles")
+        .select(articleSelect)
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(12),
+
+      supabase
+        .from("breaking_ticker")
+        .select("id,text,is_active,sort_order,created_at")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: false })
+        .limit(20),
+
+      supabase
+        .from("categories")
+        .select("id,name,slug")
+        .order("sort_order")
+        .limit(6),
+    ]);
 
   return {
     featured: (featuredRes.data?.[0] ?? null) as unknown as NewsArticle | null,
