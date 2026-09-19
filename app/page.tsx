@@ -9,34 +9,13 @@ import { formatHindiDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const { featured, latest, breaking } = await getHomeData();
+  const { featured, latest } = await getHomeData();
   const hero = featured ?? latest[0] ?? null;
   const rest = latest.filter((a) => a.id !== hero?.id);
 
   return (
     <PublicShell>
-      {breaking.length > 0 && (
-  <div className="bg-red-700 text-white">
-    <div className="mx-auto flex max-w-7xl items-center gap-3 overflow-hidden px-4 py-2 sm:px-6 lg:px-8">
-
-      <span className="breaking-flash shrink-0 rounded bg-white px-2 py-1 text-xs font-black text-red-700">
-        BREAKING
-      </span>
-
-      <div className="min-w-0 flex-1 overflow-hidden">
-        <div className="breaking-ticker flex w-max gap-8 whitespace-nowrap text-sm font-semibold">
-          {breaking.map((item) => (
-  <span key={item.id}>
-    {item.text}
-  </span>
-))}
-        </div>
-      </div>
-
-    </div>
-  </div>
-      )}
-
+    
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {hero ? (
           <section className="grid gap-6 lg:grid-cols-[1.65fr_1fr]">
