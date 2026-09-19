@@ -43,6 +43,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {article.excerpt && <p className="mt-4 text-lg leading-8 text-slate-600">{article.excerpt}</p>}
             <div className="mt-4 border-y border-slate-100 py-3 text-sm text-slate-500">प्रकाशित: {formatHindiDate(article.published_at ?? article.created_at)}</div>
           </div>
+<div className="px-5 pb-6 sm:px-8">
+  <ShareButtons title={article.title} />
+</div>
           {article.image_url && (
             <div className="relative aspect-[16/9] bg-slate-100">
               <Image src={article.image_url} alt={article.title} fill priority className="object-cover" sizes="(max-width:896px) 100vw, 896px" />
@@ -51,9 +54,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <div className="news-content p-5 sm:p-8">
             {article.content.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>)}
           </div>
-<div className="px-5 pb-6 sm:px-8">
-  <ShareButtons title={article.title} />
-</div>
         </article>
       </div>
     </PublicShell>
