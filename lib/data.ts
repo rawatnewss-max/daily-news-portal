@@ -64,19 +64,19 @@ export async function getHomeData() {
       .order("published_at", { ascending: false })
       .limit(12),
     supabase
-      .from("articles")
-      .select(articleSelect)
-      .eq("status", "published")
-      .eq("is_breaking", true)
-      .order("published_at", { ascending: false })
-      .limit(8),
+  .from("breaking_ticker")
+  .select("id,text,sort_order,created_at")
+  .eq("is_active", true)
+  .order("sort_order", { ascending: true })
+  .order("created_at", { ascending: false })
+  .limit(20),
     supabase.from("categories").select("id,name,slug").order("sort_order").limit(6),
   ]);
 
   return {
     featured: (featuredRes.data?.[0] ?? null) as unknown as NewsArticle | null,
     latest: (latestRes.data ?? []) as unknown as NewsArticle[],
-    breaking: (breakingRes.data ?? []) as unknown as NewsArticle[],
+    breaking: breakingRes.data ?? [],
     categories: categoriesRes.data ?? [],
   };
 }
