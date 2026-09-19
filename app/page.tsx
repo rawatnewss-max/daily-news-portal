@@ -21,11 +21,15 @@ export default async function HomePage() {
             <span className="breaking-flash shrink-0 rounded bg-white px-2 py-1 text-xs font-black text-red-700">
   BREAKING
 </span>
-            <div className="flex gap-8 overflow-x-auto whitespace-nowrap text-sm font-semibold [scrollbar-width:none]">
-              {breaking.map((item) => <Link key={item.id} href={`/news/${item.slug}`}>{item.title}</Link>)}
-            </div>
-          </div>
-        </div>
+            <div className="min-w-0 flex-1 overflow-hidden">
+  <div className="breaking-ticker flex w-max gap-8 whitespace-nowrap text-sm font-semibold">
+    {breaking.map((item) => (
+      <Link key={item.id} href={/news/${item.slug}}>
+        {item.title}
+      </Link>
+    ))}
+  </div>
+</div>
       )}
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
