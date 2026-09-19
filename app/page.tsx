@@ -6,7 +6,7 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { getHomeData } from "@/lib/data";
 import { formatHindiDate } from "@/lib/utils";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const { featured, latest, breaking } = await getHomeData();
