@@ -1,5 +1,5 @@
 export const fallbackSite = {
-  site_name: "Daily News Portal",
+  site_name: "Daily News Muhami",
   tagline: "अजमेर और राजस्थान की भरोसेमंद स्थानीय खबरें",
   contact_phone: "",
   contact_email: "",
