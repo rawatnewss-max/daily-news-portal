@@ -29,11 +29,11 @@ export async function Header() {
 
       <header className="relative z-20 border-b border-slate-200 bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 py-5 sm:py-7">
+          <div className="flex items-center justify-between gap-3 py-3.5 sm:py-6">
             <Link href="/" className="group flex min-w-0 items-center gap-3" aria-label="Daily News Muhami होम">
-              <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-700 text-xl font-black text-white shadow-md shadow-red-900/15 sm:h-14 sm:w-14 sm:text-2xl">न</span>
+              <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-700 text-xl font-black text-white shadow-md shadow-red-900/15 sm:h-14 sm:w-14 sm:text-2xl">न</span>
               <span className="min-w-0">
-                <span className="block truncate text-[22px] font-black leading-tight tracking-tight text-slate-950 transition group-hover:text-red-800 sm:text-[31px]">{site.site_name}</span>
+                <span className="block truncate text-[19px] font-black leading-tight tracking-tight text-slate-950 transition group-hover:text-red-800 sm:text-[31px]">{site.site_name}</span>
                 <span className="mt-1 block truncate text-[11px] font-medium text-slate-500 sm:text-sm">{site.tagline}</span>
               </span>
             </Link>
@@ -41,7 +41,7 @@ export async function Header() {
               <MapPin size={15} aria-hidden="true" /> अजमेर • राजस्थान
             </div>
           </div>
-          <div className="flex items-center gap-3 border-t border-slate-100 py-3 lg:py-0">
+          <div className="flex items-center gap-3 border-t border-slate-100 py-2.5 lg:py-0">
             <nav className="min-w-0 flex-1" aria-label="मुख्य नेविगेशन">
               <div className="news-nav-scroll hidden items-center gap-6 overflow-x-auto whitespace-nowrap py-4 text-sm font-extrabold lg:flex">
                 <Link href="/" className="shrink-0 border-b-2 border-red-700 pb-1 text-red-800">होम</Link>

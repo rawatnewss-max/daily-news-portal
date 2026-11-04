@@ -1,84 +1,78 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Check, Link2, MessageCircle, Send, Share2 } from "lucide-react";
 
 export function ShareButtons({ title }: { title: string }) {
-  const [url, setUrl] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    setUrl(window.location.href);
-  }, []);
+  function openShare(url: string) {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 
-  const facebookShare = () => {
-  window.open(
-    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-    "_blank"
-  );
-};
+  function shareWhatsApp() {
+    const text = encodeURIComponent(title + "\n" + window.location.href);
+    openShare("https://wa.me/?text=" + text);
+  }
 
-const whatsappShare = () => {
-  window.open(
-    `https://wa.me/?text=${encodeURIComponent(title + "\n" + url)}`,
-    "_blank"
-  );
-};
+  function shareFacebook() {
+    openShare("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href));
+  }
 
-  const instagramShare = async () => {
-    if (navigator.share) {
-      await navigator.share({
-        title,
-        text: title,
-        url,
-      });
-    } else {
-      await navigator.clipboard.writeText(url);
-      alert("Link copied");
+  function shareTelegram() {
+    openShare(
+      "https://t.me/share/url?url=" + encodeURIComponent(window.location.href) +
+      "&text=" + encodeURIComponent(title)
+    );
+  }
+
+  async function copyLink() {
+    const link = window.location.href;
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+    } catch {
+      window.prompt("खबर का लिंक कॉपी करें:", link);
     }
-  };
+  }
 
-  const copyLink = async () => {
-    await navigator.clipboard.writeText(url);
-    alert("Link copied");
-  };
+  async function shareNative() {
+    if (!navigator.share) {
+      await copyLink();
+      return;
+    }
+    try {
+      await navigator.share({ title, text: title, url: window.location.href });
+    } catch (error) {
+      // Closing the system share sheet is not an error.
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      await copyLink();
+    }
+  }
+
+  const baseClass = "inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 sm:text-sm";
 
   return (
-    <div className="my-6 border-y border-slate-200 py-4">
-      <div className="mb-3 font-bold">खबर शेयर करें</div>
-
-      <div className="flex flex-wrap items-center gap-3">
-
-        <button
-          onClick={facebookShare}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#1877F2] text-white"
-          aria-label="Facebook पर शेयर करें"
-        >
-          <span className="text-xl font-black">f</span>
+    <section aria-label="खबर शेयर करें" className="mt-7 border-t border-slate-200 pt-5">
+      <h2 className="mb-3 text-base font-extrabold text-slate-900">खबर शेयर करें</h2>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" onClick={shareWhatsApp} className={baseClass + " bg-[#168b48] text-white hover:bg-[#116d39]"} aria-label="WhatsApp पर खबर शेयर करें">
+          <MessageCircle size={17} aria-hidden="true" /> WhatsApp
         </button>
-
-        <button
-          onClick={whatsappShare}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white"
-          aria-label="WhatsApp पर शेयर करें"
-        >
-          <span className="text-lg">☎</span>
+        <button type="button" onClick={shareFacebook} className={baseClass + " bg-[#1877F2] text-white hover:bg-[#1260c6]"} aria-label="Facebook पर खबर शेयर करें">
+          <span aria-hidden="true" className="text-base font-black">f</span> Facebook
         </button>
-
-        <button
-          onClick={instagramShare}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white"
-          aria-label="Instagram पर शेयर करें"
-        >
-          <span className="text-xl">◎</span>
+        <button type="button" onClick={shareTelegram} className={baseClass + " bg-[#229ed9] text-white hover:bg-[#167aa9]"} aria-label="Telegram पर खबर शेयर करें">
+          <Send size={15} aria-hidden="true" /> Telegram
         </button>
-
-        <button
-          onClick={copyLink}
-          className="flex h-11 items-center justify-center rounded-full border border-slate-300 bg-white px-4 text-sm font-bold"
-        >
-          🔗 Copy Link
+        <button type="button" onClick={copyLink} className={baseClass + " border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"} aria-label="खबर का लिंक कॉपी करें">
+          {copied ? <Check size={16} aria-hidden="true" /> : <Link2 size={16} aria-hidden="true" />}
+          {copied ? "लिंक कॉपी हो गया" : "कॉपी लिंक"}
         </button>
-
+        <button type="button" onClick={shareNative} className={baseClass + " border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"} aria-label="अन्य ऐप से खबर शेयर करें">
+          <Share2 size={16} aria-hidden="true" /> अन्य ऐप
+        </button>
       </div>
-    </div>
+    </section>
   );
 }
