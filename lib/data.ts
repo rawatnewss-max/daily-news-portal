@@ -143,3 +143,27 @@ export async function searchArticles(q: string) {
     .limit(30);
   return (data ?? []) as unknown as NewsArticle[];
 }
+
+
+/**
+ * Public article suggestions. Keep the query bounded and prefer the current
+ * category without requiring any schema changes or exposing draft articles.
+ */
+export async function getRelatedArticles(articleId: string, categorySlug?: string | null) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("articles")
+    .select(articleSelect)
+    .eq("status", "published")
+    .neq("id", articleId)
+    .order("published_at", { ascending: false })
+    .limit(12);
+
+  const articles = (data ?? []) as unknown as NewsArticle[];
+  if (!categorySlug) return articles.slice(0, 4);
+
+  return [
+    ...articles.filter((item) => item.categories?.slug === categorySlug),
+    ...articles.filter((item) => item.categories?.slug !== categorySlug),
+  ].slice(0, 4);
+}
