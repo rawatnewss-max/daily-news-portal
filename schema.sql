@@ -31,7 +31,8 @@ create table if not exists public.articles (
   slug text not null unique,
   excerpt text,
   content text not null,
-  image_url text,
+  image_url text, -- selected cover image
+  image_urls text[] not null default '{}'::text[], -- gallery, max two images via editor
   category_id uuid references public.categories(id) on delete set null,
   location_id uuid references public.locations(id) on delete set null,
   author_id uuid references auth.users(id) on delete set null,
