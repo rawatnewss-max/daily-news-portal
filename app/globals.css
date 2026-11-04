@@ -16,8 +16,9 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   color: var(--ink);
-  background: #f3f4f6;
+  background: #f7f8fa;
   font-family: "Noto Sans Devanagari", "Mangal", "Nirmala UI", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; }
@@ -65,4 +66,14 @@ img { max-width: 100%; }
   min-width: 100%;
   animation: breakingTicker 15s linear infinite;
   will-change: transform;
+}
+
+summary::-webkit-details-marker { display: none; }
+.news-nav-scroll { scrollbar-width: thin; }
+.news-nav-scroll::-webkit-scrollbar { height: 3px; }
+.news-nav-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+.breaking-ticker:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .breaking-flash, .breaking-ticker { animation: none; }
 }
