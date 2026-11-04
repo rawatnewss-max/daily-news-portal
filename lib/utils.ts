@@ -1,12 +1,14 @@
 export function formatHindiDate(value: string | Date | null | undefined) {
   if (!value) return "";
   const date = typeof value === "string" ? new Date(value) : value;
+  if (Number.isNaN(date.getTime())) return "";
   return new Intl.DateTimeFormat("hi-IN", {
     day: "numeric",
     month: "long",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Asia/Kolkata",
   }).format(date);
 }
 
