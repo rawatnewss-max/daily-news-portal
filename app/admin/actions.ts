@@ -23,14 +23,59 @@ export async function logoutAction() {
 
 async function uploadImage(supabase: Awaited<ReturnType<typeof createClient>>, file: File | null) {
   if (!file || file.size === 0) return null;
-  if (file.size > 5 * 1024 * 1024) throw new Error("Image must be under 5MB");
-  if (!file.type.startsWith("image/")) throw new Error("Only image files are allowed");
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  if (file.size > 5 * 1024 * 1024) throw new Error("हर फोटो 5MB से कम होनी चाहिए।");
+  const extensions: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif" };
+  const ext = extensions[file.type];
+  if (!ext) throw new Error("JPG, PNG, WebP या GIF फोटो ही अपलोड करें।");
   const fileName = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from("news-images").upload(fileName, file, { cacheControl: "3600", upsert: false });
+  const { error } = await supabase.storage.from("news-images").upload(fileName, file, { cacheControl: "3600", upsert: false, contentType: file.type });
   if (error) throw new Error(error.message);
   const { data } = supabase.storage.from("news-images").getPublicUrl(fileName);
   return data.publicUrl;
+}
+
+/**
+ * Every photo must be in one of the two editor slots.
+ * Existing URLs are accepted only if they are already associated with this article.
+ * `image_url` remains the public cover photo for backwards compatibility.
+ */
+async function articleImages(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  formData: FormData,
+  existingUrls: string[] = [],
+) {
+  const existing = new Set(existingUrls.filter(Boolean));
+  const values: Array<string | null> = [null, null];
+
+  // Check both uploads before uploading either, so obvious invalid files do not
+  // leave a successful first upload orphaned.
+  for (let index = 0; index < 2; index++) {
+    const value = formData.get(`photo_${index}`);
+    const file = value instanceof File ? value : null;
+    if (file && file.size > 0) {
+      if (file.size > 5 * 1024 * 1024) throw new Error("हर फोटो 5MB से कम होनी चाहिए।");
+      if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) throw new Error("कृपया JPG, PNG, WebP या GIF फोटो चुनें।");
+    }
+  }
+
+  for (let index = 0; index < 2; index++) {
+    const value = formData.get(`photo_${index}`);
+    const file = value instanceof File && value.size > 0 ? value : null;
+    // Legacy open forms may still send their original image field.
+    const oldValue = index === 0 ? formData.get("image") : null;
+    const legacyFile = oldValue instanceof File && oldValue.size > 0 ? oldValue : null;
+    if (file || legacyFile) {
+      values[index] = await uploadImage(supabase, file ?? legacyFile);
+    } else {
+      const retained = safeText(formData.get(`existing_photo_${index}`));
+      if (retained && existing.has(retained)) values[index] = retained;
+    }
+  }
+
+  const requestedCover = Number(safeText(formData.get("cover_index")) || "0") === 1 ? 1 : 0;
+  const gallery = values.filter((url): url is string => Boolean(url));
+  const cover = values[requestedCover] ?? gallery[0] ?? null;
+  return { image_url: cover, image_urls: gallery };
 }
 
 function articlePayload(formData: FormData) {
@@ -59,29 +104,35 @@ function articlePayload(formData: FormData) {
 export async function createArticleAction(formData: FormData) {
   const { supabase, user } = await requireAdmin();
   const payload = articlePayload(formData);
-  const file = formData.get("image") instanceof File ? (formData.get("image") as File) : null;
-  const imageUrl = await uploadImage(supabase, file);
+  const photos = await articleImages(supabase, formData);
   const slug = `${payload.slug}-${Date.now().toString().slice(-6)}`;
-  const { error } = await supabase.from("articles").insert({ ...payload, slug, image_url: imageUrl, author_id: user.id });
+  const { error } = await supabase.from("articles").insert({ ...payload, slug, ...photos, author_id: user.id });
   if (error) throw new Error(error.message);
   revalidatePath("/");
+  revalidatePath("/admin/articles");
   redirect("/admin/articles?saved=1");
 }
 
 export async function updateArticleAction(id: string, formData: FormData) {
   const { supabase } = await requireAdmin();
   const payload = articlePayload(formData);
-  const file = formData.get("image") instanceof File ? (formData.get("image") as File) : null;
-  const imageUrl = await uploadImage(supabase, file);
-  const update: Record<string, unknown> = { ...payload, updated_at: new Date().toISOString() };
-  if (imageUrl) update.image_url = imageUrl;
+  const { data: existing, error: existingError } = await supabase
+    .from("articles").select("slug,published_at,image_url,image_urls").eq("id", id).single();
+  if (existingError || !existing) throw new Error("खबर नहीं मिली।");
+  const existingUrls = Array.from(new Set([
+    ...(Array.isArray(existing.image_urls) ? existing.image_urls : []),
+    ...(existing.image_url ? [existing.image_url] : []),
+  ]));
+  const photos = await articleImages(supabase, formData, existingUrls);
+  const update: Record<string, unknown> = { ...payload, ...photos, updated_at: new Date().toISOString() };
   if (payload.status === "published") {
-    const { data: existing } = await supabase.from("articles").select("published_at").eq("id", id).single();
-    update.published_at = existing?.published_at ?? new Date().toISOString();
+    update.published_at = existing.published_at ?? new Date().toISOString();
   }
   const { error } = await supabase.from("articles").update(update).eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/");
+  revalidatePath("/admin/articles");
+  revalidatePath(`/news/${existing.slug}`);
   redirect("/admin/articles?saved=1");
 }
 
