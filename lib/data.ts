@@ -9,6 +9,7 @@ export type NewsArticle = {
   excerpt: string | null;
   content: string;
   image_url: string | null;
+  image_urls: string[];
   status: "draft" | "published";
   is_breaking: boolean;
   is_featured: boolean;
@@ -19,7 +20,7 @@ export type NewsArticle = {
 };
 
 const articleSelect = `
-  id,title,slug,excerpt,content,image_url,status,is_breaking,is_featured,
+  id,title,slug,excerpt,content,image_url,image_urls,status,is_breaking,is_featured,
   published_at,created_at,
   categories(name,slug),
   locations(name,slug)
