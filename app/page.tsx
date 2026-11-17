@@ -3,13 +3,16 @@ import Link from "next/link";
 import { PublicShell } from "@/components/PublicShell";
 import { NewsCard } from "@/components/NewsCard";
 import { SectionTitle } from "@/components/SectionTitle";
-import { getHomeData } from "@/lib/data";
+import { getHomeData, getArticlesByCategory } from "@/lib/data";
 import { formatHindiDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const { featured, latest, categories } = await getHomeData();
+  const [{ featured, latest, categories }, { articles: worldArticles }] = await Promise.all([
+    getHomeData(),
+    getArticlesByCategory("world"),
+  ]);
   const newest = latest[0] ?? featured;
   const latestTime = newest ? new Date(newest.published_at ?? newest.created_at).getTime() : 0;
   const closeToNewest = (date: string | null, created: string) =>
@@ -80,6 +83,21 @@ export default async function HomePage() {
             {categories.map((category) => (
               <Link key={category.id} href={"/category/" + category.slug} className="shrink-0 whitespace-nowrap rounded-full border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-800 hover:border-red-300 hover:bg-red-50 hover:text-red-800">{category.name}</Link>
             ))}
+          </section>
+        )}
+        {worldArticles.length > 0 && (
+          <section aria-labelledby="world-headlines" className="mt-6 sm:mt-10">
+            <div className="mb-3 flex items-center justify-between gap-3 sm:mb-5">
+              <h2 id="world-headlines" className="border-l-4 border-red-700 pl-2.5 text-[17px] font-black text-slate-950 sm:text-2xl">
+                दुनिया की बड़ी खबरें
+              </h2>
+              <Link href="/category/world" className="shrink-0 text-xs font-bold text-red-700 hover:underline">
+                सभी विश्व समाचार देखें
+              </Link>
+            </div>
+            <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+              {worldArticles.slice(0, 6).map((article) => <NewsCard key={article.id} article={article} />)}
+            </div>
           </section>
         )}
         {rest.length > 0 && (

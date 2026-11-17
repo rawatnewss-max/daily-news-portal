@@ -51,6 +51,23 @@ export async function getLocations() {
 export async function getHomeData() {
   const supabase = await createClient();
 
+  // Keep local reporting on the homepage even when several world stories are
+  // published each morning. World headlines have their own dedicated section.
+  const { data: worldCategory } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("slug", "world")
+    .maybeSingle();
+
+  const localQuery = supabase
+    .from("articles")
+    .select(articleSelect)
+    .eq("status", "published");
+
+  if (worldCategory?.id) {
+    localQuery.neq("category_id", worldCategory.id);
+  }
+
   const [featuredRes, latestRes, breakingRes, categoriesRes] =
     await Promise.all([
       supabase
@@ -61,10 +78,7 @@ export async function getHomeData() {
         .order("published_at", { ascending: false })
         .limit(1),
 
-      supabase
-        .from("articles")
-        .select(articleSelect)
-        .eq("status", "published")
+      localQuery
         .order("published_at", { ascending: false })
         .limit(12),
 
