@@ -96,8 +96,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <div className="news-content text-slate-800">
               {paragraphs.map((paragraph, index) => (
                 <p key={index}>
-                  {paragraph.split(/(https?:\\/\\/[^\\s;]+)/g).map((part, partIndex) =>
-                    /^https?:\\/\\//.test(part) ? (
+                  {paragraph.split(/(https?:\/\/[^\s;]+)/g).map((part, partIndex) =>
+                    /^https?:\/\//.test(part) ? (
                       <a
                         key={partIndex}
                         href={part}
