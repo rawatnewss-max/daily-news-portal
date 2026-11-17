@@ -94,7 +94,25 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
           <div className="px-4 pb-5 pt-5 sm:px-8 sm:pb-8 sm:pt-7">
             <div className="news-content text-slate-800">
-              {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+              {paragraphs.map((paragraph, index) => (
+                <p key={index}>
+                  {paragraph.split(/(https?:\\/\\/[^\\s;]+)/g).map((part, partIndex) =>
+                    /^https?:\\/\\//.test(part) ? (
+                      <a
+                        key={partIndex}
+                        href={part}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        className="font-semibold text-red-700 underline decoration-red-300 underline-offset-2 hover:text-red-900"
+                      >
+                        स्रोत लिंक खोलें
+                      </a>
+                    ) : (
+                      part
+                    )
+                  )}
+                </p>
+              ))}
             </div>
             <ShareButtons title={article.title} />
           </div>

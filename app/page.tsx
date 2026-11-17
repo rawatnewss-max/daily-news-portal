@@ -35,7 +35,7 @@ export default async function HomePage() {
         </div>
         {showingArchive && (
           <div role="status" className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs font-semibold leading-5 text-amber-900 sm:mb-6 sm:p-4 sm:text-sm sm:leading-6">
-            इस समय पिछली प्रकाशित खबरें दिखाई जा रही हैं। नई खबर प्रकाशित होते ही यहाँ प्रदर्शित होगी।
+            इस खंड में पिछली स्थानीय खबरें दिख रही हैं। आज के ताज़ा विश्व समाचार नीचे देखें।
           </div>
         )}
         {hero ? (
