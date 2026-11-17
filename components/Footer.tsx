@@ -6,9 +6,9 @@ export async function Footer() {
   const site = await getSiteSettings();
 
   return (
-    <footer className="mt-8 border-t-[3px] border-red-700 bg-slate-950 text-slate-300 sm:mt-12">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-9 sm:px-6 md:grid-cols-3 lg:px-8">
-        <div>
+    <footer className="mt-6 border-t-[3px] border-red-700 bg-slate-950 text-slate-300 sm:mt-12">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-4 gap-y-5 px-4 py-5 sm:gap-8 sm:px-6 sm:py-9 md:grid-cols-3 lg:px-8">
+        <div className="col-span-2 md:col-span-1">
           <Link href="/" className="inline-flex items-center gap-2.5 text-white">
             <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-700 text-xl font-black">न</span>
             <span className="text-lg font-black sm:text-xl">{site.site_name}</span>
@@ -19,7 +19,7 @@ export async function Footer() {
 
         <div>
           <h2 className="text-sm font-extrabold text-white">उपयोगी लिंक</h2>
-          <nav aria-label="फुटर नेविगेशन" className="mt-4 flex flex-wrap gap-x-5 gap-y-3 text-sm md:flex-col md:items-start">
+          <nav aria-label="फुटर नेविगेशन" className="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-sm sm:mt-4 md:flex-col md:items-start">
             <Link href="/" className="transition hover:text-white">होम</Link>
             <Link href="/search" className="transition hover:text-white">खबर खोजें</Link>
             <Link href="/admin/login" className="transition hover:text-white">एडमिन लॉगिन</Link>
@@ -28,7 +28,7 @@ export async function Footer() {
 
         <div>
           <h2 className="text-sm font-extrabold text-white">संपर्क</h2>
-          <div className="mt-4 space-y-3 text-sm text-slate-400">
+          <div className="mt-2 space-y-2 text-sm text-slate-400 sm:mt-4 sm:space-y-3">
             {site.contact_phone && (
               <a href={"tel:" + site.contact_phone.replace(/[^\d+]/g, "")} className="flex items-start gap-2.5 break-all transition hover:text-white">
                 <Phone size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
