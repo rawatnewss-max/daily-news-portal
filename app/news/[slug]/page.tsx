@@ -73,11 +73,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </Link>
               )}
             </div>
-            <h1 className="mt-3 text-[1.5rem] font-black leading-[1.45] tracking-tight text-slate-950 sm:text-[2.1rem] sm:leading-[1.4]">
+            <h1 className="news-headline mt-3 text-[1.5rem] font-black leading-[1.45] tracking-tight text-slate-950 sm:text-[2.1rem] sm:leading-[1.4]">
               {article.title}
             </h1>
             {article.excerpt && (
-              <p className="mt-3 text-[0.98rem] font-medium leading-[1.8] text-slate-600 sm:text-lg">
+              <p className="news-excerpt mt-3 text-[0.98rem] font-medium leading-[1.8] text-slate-600 sm:text-lg">
                 {article.excerpt}
               </p>
             )}

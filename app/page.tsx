@@ -51,7 +51,7 @@ export default async function HomePage() {
                   ) : <div aria-hidden="true" className="absolute right-4 top-4 hidden text-8xl font-black text-red-700/10 sm:block">न्यूज़</div>}
                   <div className="relative z-10 p-4 sm:p-7">
                     <div className={"mb-1.5 text-xs font-bold sm:mb-2 sm:text-sm " + (hero.image_url ? "text-red-200" : "text-red-800")}>{hero.categories?.name ?? "मुख्य खबर"}</div>
-                    <h1 className="line-clamp-3 text-[19px] font-black leading-[1.45] sm:text-4xl sm:leading-tight">{hero.title}</h1>
+                    <h1 className="news-headline line-clamp-3 text-[19px] font-black leading-[1.45] sm:text-4xl sm:leading-tight">{hero.title}</h1>
                     <div className={"mt-2 text-[11px] sm:mt-4 sm:text-xs " + (hero.image_url ? "text-slate-200" : "text-slate-600")}>{formatHindiDate(hero.published_at ?? hero.created_at)}</div>
                   </div>
                 </div>
@@ -63,7 +63,7 @@ export default async function HomePage() {
                 {rest.map((item) => (
                   <Link key={item.id} href={`/news/${item.slug}`} className="block py-3 first:pt-0">
                     <div className="text-xs font-semibold text-red-700">{item.locations?.name ?? item.categories?.name ?? "समाचार"}</div>
-                    <div className="mt-1 font-bold leading-6 hover:text-red-700">{item.title}</div>
+                    <div className="news-headline mt-1 font-bold leading-6 hover:text-red-700">{item.title}</div>
                   </Link>
                 ))}
               </div>

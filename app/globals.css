@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,6 +24,26 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; }
+
+/* Traditional Hindi newspaper look without Kruti Dev's non-Unicode encoding.
+ * Only article headlines, summaries and story text use the news serif face;
+ * site navigation, buttons and admin tools keep their readable UI font. */
+.news-headline,
+.news-excerpt,
+.news-content {
+  font-family: "Noto Serif Devanagari", "Noto Serif", "Mangal", "Nirmala UI", serif;
+  font-synthesis: none;
+}
+.news-headline {
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+.news-excerpt {
+  font-weight: 500;
+}
+.news-content {
+  font-weight: 400;
+}
 
 .news-content p {
   margin: 0 0 1.2rem;

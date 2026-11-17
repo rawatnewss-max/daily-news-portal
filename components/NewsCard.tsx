@@ -33,11 +33,11 @@ export function NewsCard({ article }: { article: NewsArticle }) {
             {article.categories?.name && <span className="truncate">{article.categories.name}</span>}
             {article.locations?.name && <span className="truncate text-slate-500">• {article.locations.name}</span>}
           </div>
-          <h2 className="line-clamp-3 text-[15px] font-extrabold leading-[1.45] text-slate-950 transition-colors group-hover:text-red-700 sm:text-lg sm:leading-[1.55]">
+          <h2 className="news-headline line-clamp-3 text-[15px] font-extrabold leading-[1.45] text-slate-950 transition-colors group-hover:text-red-700 sm:text-lg sm:leading-[1.55]">
             {article.title}
           </h2>
           {article.excerpt && (
-            <p className="mt-2 hidden line-clamp-2 text-sm leading-6 text-slate-600 sm:block">
+            <p className="news-excerpt mt-2 hidden line-clamp-2 text-sm leading-6 text-slate-600 sm:block">
               {article.excerpt}
             </p>
           )}
