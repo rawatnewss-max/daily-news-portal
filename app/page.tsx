@@ -9,9 +9,10 @@ import { formatHindiDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [{ featured, latest, categories }, { articles: worldArticles }] = await Promise.all([
+  const [{ featured, latest, categories }, { articles: worldArticles }, { articles: ajmerArticles }] = await Promise.all([
     getHomeData(),
     getArticlesByCategory("world"),
+    getArticlesByCategory("ajmer"),
   ]);
   const newest = latest[0] ?? featured;
   const latestTime = newest ? new Date(newest.published_at ?? newest.created_at).getTime() : 0;
@@ -23,6 +24,8 @@ export default async function HomePage() {
     ?? latest.find((a) => a.image_url && closeToNewest(a.published_at, a.created_at))
     ?? newest;
   const rest = latest.filter((a) => a.id !== hero?.id);
+  const ajmerFeed = ajmerArticles.filter((a) => a.id !== hero?.id);
+  const otherLocal = rest.filter((a) => a.categories?.slug !== "ajmer");
   const showingArchive = latestTime > 0 && Date.now() - latestTime > 7 * 86400000;
 
   return (
@@ -85,6 +88,21 @@ export default async function HomePage() {
             ))}
           </section>
         )}
+        {ajmerFeed.length > 0 && (
+          <section aria-labelledby="ajmer-headlines" className="mt-6 sm:mt-10">
+            <div className="mb-3 flex items-center justify-between gap-3 sm:mb-5">
+              <h2 id="ajmer-headlines" className="border-l-4 border-red-700 pl-2.5 text-[17px] font-black text-slate-950 sm:text-2xl">
+                अजमेर जिले की ताज़ा खबरें
+              </h2>
+              <Link href="/category/ajmer" className="shrink-0 text-xs font-bold text-red-700 hover:underline">
+                सभी अजमेर समाचार
+              </Link>
+            </div>
+            <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+              {ajmerFeed.slice(0, 9).map((article) => <NewsCard key={article.id} article={article} />)}
+            </div>
+          </section>
+        )}
         {worldArticles.length > 0 && (
           <section aria-labelledby="world-headlines" className="mt-6 sm:mt-10">
             <div className="mb-3 flex items-center justify-between gap-3 sm:mb-5">
@@ -96,15 +114,15 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-              {worldArticles.slice(0, 6).map((article) => <NewsCard key={article.id} article={article} />)}
+              {worldArticles.slice(0, 12).map((article) => <NewsCard key={article.id} article={article} />)}
             </div>
           </section>
         )}
-        {rest.length > 0 && (
+        {otherLocal.length > 0 && (
           <section className="mt-5 sm:mt-10">
             <SectionTitle>{showingArchive ? "अन्य प्रकाशित खबरें" : "लेटेस्ट न्यूज़"}</SectionTitle>
             <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-              {rest.slice(0, 11).map((article) => <NewsCard key={article.id} article={article} />)}
+              {otherLocal.slice(0, 11).map((article) => <NewsCard key={article.id} article={article} />)}
             </div>
           </section>
         )}
