@@ -2,16 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Images } from "lucide-react";
+import { ChevronLeft, ChevronRight, Images, Info } from "lucide-react";
 
 export function ArticleGallery({
   images,
   cover,
   title,
+  credit,
 }: {
   images: string[];
   cover?: string | null;
   title: string;
+  credit?: string | null;
 }) {
   // The chosen cover must always be the first photo; preserve both photos
   // when an editor uploads two images for the same news story.
@@ -57,6 +59,39 @@ export function ArticleGallery({
           sizes="(max-width: 768px) 100vw, 768px"
           className="object-contain"
         />
+        {credit && (
+          <details className="absolute bottom-2.5 right-2.5 z-10 max-w-[calc(100%-1.25rem)] sm:bottom-3 sm:right-3">
+            <summary
+              aria-label="तस्वीर का श्रेय और लाइसेंस देखें"
+              title="तस्वीर का श्रेय"
+              className="flex h-7 w-7 cursor-pointer list-none items-center justify-center rounded-full bg-slate-950/75 text-white shadow-sm backdrop-blur-sm hover:bg-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700"
+            >
+              <Info size={15} aria-hidden="true" />
+            </summary>
+            <div className="absolute bottom-full right-0 mb-2 max-h-48 w-[min(82vw,330px)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-3 text-[11px] leading-5 text-slate-700 shadow-xl">
+              <p className="mb-1 font-bold text-slate-900">तस्वीर का श्रेय और उपयोग अधिकार</p>
+              <p className="break-words">
+                {credit.split(/(https?:\/\/[^\s;]+)/g).map((part, index) =>
+                  /^https?:\/\//.test(part) ? (
+                    <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="break-all text-red-700 underline">
+                      मूल फोटो
+                    </a>
+                  ) : part
+                )}
+              </p>
+              {credit.includes("CC BY-SA 4.0") && (
+                <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" className="mt-1 block text-red-700 underline">
+                  CC BY-SA 4.0 लाइसेंस
+                </a>
+              )}
+              {credit.includes("CC BY 4.0") && (
+                <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" className="mt-1 block text-red-700 underline">
+                  CC BY 4.0 लाइसेंस
+                </a>
+              )}
+            </div>
+          </details>
+        )}
         {photos.length > 1 && (
           <>
             <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-slate-950/80 px-3 py-1.5 text-xs font-bold text-white">

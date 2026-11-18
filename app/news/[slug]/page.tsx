@@ -39,8 +39,22 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     ...(article.image_url ? [article.image_url] : []),
     ...(Array.isArray(article.image_urls) ? article.image_urls : []),
   ];
-  const paragraphs = article.content
-    .split(/\r?\n\s*\r?\n/)
+  // Keep editorial sourcing in the database for fact-checking, but never
+  // render source/date/photo-credit notes as part of the published story.
+  // Existing stories use individual labelled lines; future imports can use
+  // the explicit --- संपादकीय विवरण --- separator.
+  const contentLines = article.content.replace(/\r\n?/g, "\n").split("\n");
+  const editorialFooterPattern = /^(?:[-—–]{2,}\s*(?:संपादकीय\s*विवरण|EDITORIAL\s+METADATA|SOURCES)|(?:घटना(?:\s*[\/／-]\s*रिपोर्ट)?|रिपोर्ट(?:\s*की)?\s*तारीख|प्रकाशन\s*तारीख|(?:मूल|सहायक|समाचार|द्वितीय|अन्य)\s*स्रोत|स्रोत|पुष्टि|संदर्भ|(?:फोटो|चित्र)(?:\s*(?:साभार|क्रेडिट|विवरण))?|मूल\s*मीडिया|लाइसेंस|Photo\s*Credit|Image\s*Credit|Sources?)(?:\s*\([^)]*\))?\s*[:：])/i;
+  const editorialStart = contentLines.findIndex((line) => editorialFooterPattern.test(line.trim()));
+  const editorialNotes = editorialStart === -1 ? [] : contentLines.slice(editorialStart);
+  const storyText = (editorialStart === -1 ? contentLines : contentLines.slice(0, editorialStart))
+    .join("\n").trim();
+  const photoCredit = editorialNotes
+    .find((line) => /^(?:फोटो|चित्र)\s*(?:साभार|क्रेडिट)\s*[:：]/i.test(line.trim()))
+    ?.trim()
+    .replace(/^(?:फोटो|चित्र)\s*(?:साभार|क्रेडिट)\s*[:：]\s*/i, "") ?? null;
+  const paragraphs = storyText
+    .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 
@@ -90,7 +104,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
           </header>
 
-          <ArticleGallery images={photos} cover={article.image_url} title={article.title} />
+          <ArticleGallery images={photos} cover={article.image_url} title={article.title} credit={photoCredit} />
 
           <div className="px-4 pb-5 pt-5 sm:px-8 sm:pb-8 sm:pt-7">
             <div className="news-content text-slate-800">
