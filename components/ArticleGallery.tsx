@@ -31,6 +31,8 @@ export function ArticleGallery({
 
   const currentIndex = Math.min(selected, photos.length - 1);
   const current = photos[currentIndex];
+  // Show a concise visible attribution; full author/license/URL remain in the info panel.
+  const sourceName = credit?.split(/[,;|।\n]/)[0]?.replace(/https?:\/\/\S+/g, "").trim().slice(0, 90) || null;
 
   function selectNext(direction: number) {
     setSelected((value) => (value + direction + photos.length) % photos.length);
