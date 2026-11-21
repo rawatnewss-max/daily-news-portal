@@ -109,3 +109,18 @@ summary::-webkit-details-marker { display: none; }
   html { scroll-behavior: auto; }
   .breaking-flash, .breaking-ticker { animation: none; }
 }
+
+/* Mobile-first news reading: tighter navigation, responsive touch targets and
+   a safe-area-aware bottom dock. Desktop layout stays unchanged. */
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+@media (max-width: 639px) {
+  .news-nav-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .news-nav-scroll::-webkit-scrollbar { display: none; }
+  .news-nav-scroll > a { scroll-snap-align: start; }
+  .mobile-bottom-nav { padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
